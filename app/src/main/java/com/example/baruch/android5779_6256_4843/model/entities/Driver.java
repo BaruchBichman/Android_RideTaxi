@@ -1,4 +1,4 @@
-package com.example.baruch.android5779_6256_4843.model;
+package com.example.baruch.android5779_6256_4843.model.entities;
 
 
 public class Driver {
