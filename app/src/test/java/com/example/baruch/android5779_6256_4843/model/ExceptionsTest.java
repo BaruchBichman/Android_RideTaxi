@@ -2,9 +2,9 @@ package com.example.baruch.android5779_6256_4843.model;
 
 import org.junit.Test;
 
-import static com.example.baruch.android5779_6256_4843.model.Exceptions.checkEmail;
-import static com.example.baruch.android5779_6256_4843.model.Exceptions.checkOnlyLetters;
-import static com.example.baruch.android5779_6256_4843.model.Exceptions.checkOnlyNumbers;
+import static com.example.baruch.android5779_6256_4843.model.entities.Exceptions.checkEmail;
+import static com.example.baruch.android5779_6256_4843.model.entities.Exceptions.checkOnlyLetters;
+import static com.example.baruch.android5779_6256_4843.model.entities.Exceptions.checkOnlyNumbers;
 import static org.junit.Assert.*;
 
 public class ExceptionsTest {

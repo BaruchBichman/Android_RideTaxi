@@ -1,14 +1,13 @@
-package com.example.baruch.android5779_6256_4843.model;
+package com.example.baruch.android5779_6256_4843.model.entities;
 
 import android.location.Address;
-import android.provider.ContactsContract;
 
 import java.time.LocalTime;
 
 public class Ride {
 
-    public enum RideState{AVAILABLE,BUSY,FINISH};
-    private RideState mRideState;
+
+    private ClientRequestStatus mRideState;
     private Address mStartAddress;
     private Address mDestinationAddress;
     private LocalTime mStartTime;
@@ -18,11 +17,11 @@ public class Ride {
     private String mClientEmail;
 
 
-    public RideState getRideState() {
+    public ClientRequestStatus getRideState() {
         return mRideState;
     }
 
-    public void setRideState(RideState rideState) {
+    public void setRideState(ClientRequestStatus rideState) {
         mRideState = rideState;
     }
 

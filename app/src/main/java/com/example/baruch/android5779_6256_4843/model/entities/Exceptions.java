@@ -1,6 +1,6 @@
-package com.example.baruch.android5779_6256_4843.model;
+package com.example.baruch.android5779_6256_4843.model.entities;
 
-public class Exceptions {
+public final class Exceptions {
 
     public static boolean checkOnlyLetters(String value) {
         return value.matches("[a-zA-Z]+");
