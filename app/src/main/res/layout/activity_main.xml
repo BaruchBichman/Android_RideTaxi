@@ -9,22 +9,24 @@
 
 
     <Button
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/logoImageView"
         android:layout_centerHorizontal="true"
         android:background="@color/colorAccent"
         android:text="@string/start"
         android:textColor="@color/colorPrimaryDark" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logoImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="70dp"
         android:contentDescription="@string/app_name"
-        app:srcCompat="@drawable/ride_taxi_logo" />
+        app:srcCompat="@drawable/ride_taxi_logo"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>
