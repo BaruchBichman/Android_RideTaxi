@@ -29,7 +29,8 @@
             android:background="@color/colorAccent"
             android:ems="10"
             android:hint="@string/firstNameEditText"
-            android:inputType="textNoSuggestions|textPersonName" />
+            android:inputType="textNoSuggestions|textPersonName"
+            />
 
         <EditText
             android:id="@+id/lastNameEditText"
@@ -80,5 +81,13 @@
             android:background="@color/colorAccent"
             android:layout_margin="@dimen/marginEditText"/>
 
+        <ImageButton
+            android:id="@+id/goButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/padding_normal"
+            android:src="@drawable/go"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

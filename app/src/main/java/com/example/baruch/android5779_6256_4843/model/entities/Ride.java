@@ -1,18 +1,17 @@
 package com.example.baruch.android5779_6256_4843.model.entities;
 
-import android.location.Address;
-
 import java.time.LocalTime;
 
 public class Ride {
 
 
     private ClientRequestStatus mRideState;
-    private String mStartAddress;
+    private String mPickupAddress;
     private String mDestinationAddress;
     private LocalTime mStartTime;
     private LocalTime mFinishTime;
-    private String mClientName;
+    private String mClientFirstName;
+    private String mClientLastName;
     private String mClientTelephone;
     private String mClientEmail;
     private String mKey;
@@ -26,12 +25,12 @@ public class Ride {
         mRideState = rideState;
     }
 
-    public String getStartAddress() {
-        return mStartAddress;
+    public String getPickupAddress() {
+        return mPickupAddress;
     }
 
-    public void setStartAddress(String startAddress) {
-        mStartAddress = startAddress;
+    public void setPickupAddress(String startAddress) {
+        mPickupAddress = startAddress;
     }
 
     public String getDestinationAddress() {
@@ -58,12 +57,12 @@ public class Ride {
         mFinishTime = finishTime;
     }
 
-    public String getClientName() {
-        return mClientName;
+    public String getClientFirstNameName() {
+        return mClientFirstName;
     }
 
-    public void setClientName(String clientName) {
-        mClientName = clientName;
+    public void setClientFirstName(String clientFirstName) {
+        mClientFirstName = clientFirstName;
     }
 
     public String getClientTelephone() {
@@ -88,5 +87,12 @@ public class Ride {
 
     public void setKey(String key) {
         mKey = key;
+    }
+
+    public String getClientLastName() {
+        return mClientLastName;
+    }
+    public void setClientLastName(String ClientLastName) {
+        mClientLastName = ClientLastName;
     }
 }
