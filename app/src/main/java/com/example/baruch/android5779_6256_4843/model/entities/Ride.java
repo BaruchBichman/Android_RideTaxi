@@ -8,13 +8,14 @@ public class Ride {
 
 
     private ClientRequestStatus mRideState;
-    private Address mStartAddress;
-    private Address mDestinationAddress;
+    private String mStartAddress;
+    private String mDestinationAddress;
     private LocalTime mStartTime;
     private LocalTime mFinishTime;
     private String mClientName;
     private String mClientTelephone;
     private String mClientEmail;
+    private String mKey;
 
 
     public ClientRequestStatus getRideState() {
@@ -25,19 +26,19 @@ public class Ride {
         mRideState = rideState;
     }
 
-    public Address getStartAddress() {
+    public String getStartAddress() {
         return mStartAddress;
     }
 
-    public void setStartAddress(Address startAddress) {
+    public void setStartAddress(String startAddress) {
         mStartAddress = startAddress;
     }
 
-    public Address getDestinationAddress() {
+    public String getDestinationAddress() {
         return mDestinationAddress;
     }
 
-    public void setDestinationAddress(Address destinationAddress) {
+    public void setDestinationAddress(String destinationAddress) {
         mDestinationAddress = destinationAddress;
     }
 
@@ -81,4 +82,11 @@ public class Ride {
         mClientEmail = clientEmail;
     }
 
+    public String getKey() {
+        return mKey;
+    }
+
+    public void setKey(String key) {
+        mKey = key;
+    }
 }
