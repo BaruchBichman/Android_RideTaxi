@@ -181,7 +181,6 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
         backend.addNewClientRequestToDataBase(ride);
     }
 
-                ride.setPickupAddress(pickUpAddressEditText.getText().toString());
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
