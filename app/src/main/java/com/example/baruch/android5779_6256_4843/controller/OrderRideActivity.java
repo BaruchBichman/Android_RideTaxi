@@ -16,7 +16,7 @@ import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 
 public class OrderRideActivity extends AppCompatActivity {
 
-    private ImageButton newRideButton;
+    private Button newRideButton;
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText emailEditText;
@@ -32,7 +32,7 @@ public class OrderRideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_ride);
 
-        newRideButton=(ImageButton)findViewById(R.id.goButton);
+        newRideButton=(Button)findViewById(R.id.orderTaxiButton);
         firstNameEditText=(EditText)findViewById(R.id.firstNameEditText);
         lastNameEditText=(EditText)findViewById(R.id.lastNameEditText);
         emailEditText=(EditText)findViewById(R.id.emailEditText);
