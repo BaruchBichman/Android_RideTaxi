@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimaryDark"
         android:orientation="vertical"
         >
 
@@ -17,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
             android:text="@string/enter_your_details"
-            android:textColor="@color/colorAccent"
             android:textSize="24sp" />
 
         <EditText
@@ -26,11 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginEditText"
-            android:background="@color/colorAccent"
             android:ems="10"
             android:hint="@string/firstNameEditText"
             android:inputType="textNoSuggestions|textPersonName"
-            />
+            android:drawableStart="@drawable/person_icon"
+            android:drawableLeft="@drawable/person_icon" />
 
         <EditText
             android:id="@+id/lastNameEditText"
@@ -39,8 +38,9 @@
             android:ems="10"
             android:hint="@string/last_nameEditText"
             android:inputType="textPersonName"
-            android:background="@color/colorAccent"
-            android:layout_margin="@dimen/marginEditText"/>
+            android:layout_margin="@dimen/marginEditText"
+            android:drawableLeft="@drawable/person_icon"
+            android:drawableStart="@drawable/person_icon" />
 
         <EditText
             android:id="@+id/emailEditText"
@@ -49,8 +49,9 @@
             android:ems="10"
             android:hint="@string/e_mailEditText"
             android:inputType="textEmailAddress"
-            android:background="@color/colorAccent"
-            android:layout_margin="@dimen/marginEditText"/>
+            android:layout_margin="@dimen/marginEditText"
+            android:drawableLeft="@drawable/email_icon"
+            android:drawableStart="@drawable/email_icon" />
 
         <EditText
             android:id="@+id/phoneNumberEditText"
@@ -59,8 +60,22 @@
             android:ems="10"
             android:hint="@string/phone_numberEditText"
             android:inputType="phone"
-            android:background="@color/colorAccent"
-            android:layout_margin="@dimen/marginEditText"/>
+            android:layout_margin="@dimen/marginEditText"
+            android:drawableLeft="@drawable/phone_icon"
+            android:drawableStart="@drawable/phone_icon" />
+
+        <EditText
+            android:id="@+id/pickupAddressEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/pickup_addressEditText_current_Finding_your_location"
+            android:inputType="textPostalAddress"
+            android:layout_margin="@dimen/marginEditText"
+            android:drawableLeft="@drawable/search_icon"
+            android:drawableStart="@drawable/search_icon"
+            android:focusable="false"/>
+
         <EditText
             android:id="@+id/destinationEditText"
             android:layout_width="match_parent"
@@ -68,26 +83,16 @@
             android:ems="10"
             android:hint="@string/destinationEditText"
             android:inputType="textPostalAddress"
-            android:background="@color/colorAccent"
-            android:layout_margin="@dimen/marginEditText"/>
+            android:layout_margin="@dimen/marginEditText"
+            android:drawableLeft="@drawable/search_icon"
+            android:drawableStart="@drawable/search_icon"
+            android:focusable="false"/>
 
-        <EditText
-            android:id="@+id/pickupAddressEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/pickup_addressEditText"
-            android:inputType="textPostalAddress"
-            android:background="@color/colorAccent"
-            android:layout_margin="@dimen/marginEditText"/>
-
-        <ImageButton
-            android:id="@+id/goButton"
+        <Button
+            android:id="@+id/orderTaxiButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
             android:layout_gravity="center_horizontal"
-            android:padding="@dimen/padding_normal"
-            android:src="@drawable/go"/>
+            android:text="@string/order_taxiButton" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

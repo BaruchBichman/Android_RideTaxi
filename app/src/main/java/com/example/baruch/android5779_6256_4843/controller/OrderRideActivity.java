@@ -27,7 +27,6 @@ import com.example.baruch.android5779_6256_4843.model.backend.BackendFactory;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,27 +34,24 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import org.shredzone.commons.suncalc.SunTimes;
 
 public class OrderRideActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ImageButton newRideButton;
+    final int PLACE_PICKER_REQUEST_DESTINATION = 1;
+    final int PLACE_PICKER_REQUEST_PICKUP = 2;
+    private Button newRideButton;
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText emailEditText;
     private EditText phoneNumberEditText;
     private EditText destinationAddressEditText;
     private EditText pickUpAddressEditText;
-
     private Ride ride;
     private Backend backend;
-
     // Acquire a reference to the system Location Manager
     private LocationManager locationManager;
     // Define a listener that responds to location updates
     private LocationListener locationListener;
-
-    final int PLACE_PICKER_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +62,17 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void findViews() {
-        newRideButton=(ImageButton)findViewById(R.id.goButton);
-        firstNameEditText=(EditText)findViewById(R.id.firstNameEditText);
-        lastNameEditText=(EditText)findViewById(R.id.lastNameEditText);
-        emailEditText=(EditText)findViewById(R.id.emailEditText);
-        phoneNumberEditText=(EditText)findViewById(R.id.phoneNumberEditText);
-        destinationAddressEditText=(EditText)findViewById(R.id.destinationEditText);
-        pickUpAddressEditText=(EditText)findViewById(R.id.pickupAddressEditText);
+
+
+        newRideButton = (Button) findViewById(R.id.orderTaxiButton);
+        firstNameEditText = (EditText) findViewById(R.id.firstNameEditText);
+        lastNameEditText = (EditText) findViewById(R.id.lastNameEditText);
+        emailEditText = (EditText) findViewById(R.id.emailEditText);
+        phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
+        destinationAddressEditText = (EditText) findViewById(R.id.destinationEditText);
+        destinationAddressEditText.setOnClickListener(this);
+        pickUpAddressEditText = (EditText) findViewById(R.id.pickupAddressEditText);
+        pickUpAddressEditText.setOnClickListener(this);
         newRideButton.setOnClickListener(this);
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -80,15 +80,7 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-
-                showSunTimes(location.getLatitude(), location.getLongitude()); /// ...
-
-                // Called when a new location is found by the network location provider.
-                //    Toast.makeText(getBaseContext(), location.toString(), Toast.LENGTH_LONG).show();
-                pickUpAddressEditText.setText(getPlace(location));////location.toString());
-
-                // Remove the listener you previously added
-                //  locationManager.removeUpdates(locationListener);
+                pickUpAddressEditText.setText(getPlace(location));
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -102,27 +94,14 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
         };
     }
 
-    void showSunTimes( double lat, double lng) {
-        Date date = new Date();// date of calculation
-
-        SunTimes times = SunTimes.compute()
-                .on(date)       // set a date
-                .at(lat, lng)   // set a location
-                .execute();     // get the results
-        System.out.println("Sunrise: " + times.getRise());
-        System.out.println("Sunset: " + times.getSet());
-    }
-
     private void getLocation() {
         //     Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
-
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
-
     }
 
     public String getPlace(Location location) {
@@ -134,14 +113,11 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
 
             if (addresses.size() > 0) {
                 String address = addresses.get(0).getAddressLine(0);
-                return address ;
-            }
-            else {
+                return address;
+            } else {
                 return "no place: \n (" + location.getLongitude() + " , " + location.getLatitude() + ")";
             }
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return "IOException ...";
@@ -161,16 +137,38 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
+
     @Override
     public void onClick(View v) {
-        if(v == newRideButton){
+        if (v == newRideButton) {
             loadData();
+        }
+        if (v == destinationAddressEditText) {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST_DESTINATION);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        }
+        if (v == pickUpAddressEditText) {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+            try {
+                startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST_PICKUP);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void loadData() {
-        ride=new Ride();
-        backend= BackendFactory.getBackend();
+        ride = new Ride();
+        backend = BackendFactory.getBackend();
 
         ride.setClientFirstName(firstNameEditText.getText().toString());
         ride.setClientLastName(lastNameEditText.getText().toString());
@@ -182,21 +180,17 @@ public class OrderRideActivity extends AppCompatActivity implements View.OnClick
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
+        if (requestCode == PLACE_PICKER_REQUEST_DESTINATION) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
-
-                Date date = new Date();// date of calculation
-
-                SunTimes times = SunTimes.compute()
-                        .on(date)       // set a date
-                        .at(place.getLatLng().latitude,place.getLatLng().longitude)   // set a location
-                        .execute();     // get the results
-
-                //toastMsg+= "\nSunrise: " + times.getRise();
-                //toastMsg+= "\nSunset: " + times.getSet();
-                pickUpAddressEditText.setText(toastMsg);
+                destinationAddressEditText.setText(place.getAddress());
+            }
+        }
+        if (requestCode == PLACE_PICKER_REQUEST_PICKUP) {
+            if (resultCode == RESULT_OK) {
+                locationManager.removeUpdates(locationListener);
+                Place place = PlacePicker.getPlace(data, this);
+                pickUpAddressEditText.setText(place.getAddress());
             }
         }
     }
