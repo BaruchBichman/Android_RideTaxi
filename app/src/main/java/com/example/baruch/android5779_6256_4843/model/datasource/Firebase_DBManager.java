@@ -1,6 +1,7 @@
 package com.example.baruch.android5779_6256_4843.model.datasource;
 import android.support.annotation.NonNull;
 
+import com.example.baruch.android5779_6256_4843.model.backend.Action;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,36 +30,23 @@ public class Firebase_DBManager implements Backend {
         return firebase_dbManager;
     }
 
-
-    public interface Action<T>{
-        void onSuccess(T obj);
-        void onFailure(Exception exception);
-        void onProgress(String status, double Percent);
-    }
-
-    public interface NotifyDataChange<T>{
-        void onDataChanged(T obj);
-        void onFailure(Exception exception);
-    }
-
     static DatabaseReference OrdersTaxiRef;
     static {
         FirebaseDatabase database =FirebaseDatabase.getInstance();
         OrdersTaxiRef=database.getReference("orders");
     }
-    @Override
-    public void addNewClientRequestToDataBase(Ride ride) {
-        final Action<String> action = null;
-        addNewClientRequestToFireBase(ride,action);
-    }
 
-    public void addNewClientRequestToFireBase(final Ride ride,final Action<String> action ){
+
+    /*--------------------OPERATIONS--------------------*/
+
+    @Override
+    public void addNewClientRequestToDataBase(final Ride ride, final Action action) {
         String key=OrdersTaxiRef.push().getKey();
         ride.setKey(key);
         OrdersTaxiRef.child(key).setValue(ride).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                action.onSuccess(ride.getKey());
+                action.onSuccess(true);
                 action.onProgress("Request for a Taxi succeed",100);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -70,4 +58,5 @@ public class Firebase_DBManager implements Backend {
         });
 
     }
+
 }

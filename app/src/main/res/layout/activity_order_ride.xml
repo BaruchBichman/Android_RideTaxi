@@ -27,7 +27,7 @@
             android:layout_margin="@dimen/marginEditText"
             android:ems="10"
             android:hint="@string/firstNameEditText"
-            android:inputType="textNoSuggestions|textPersonName"
+            android:inputType="textPersonName"
             android:drawableStart="@drawable/person_icon"
             android:drawableLeft="@drawable/person_icon" />
 
@@ -92,5 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/order_taxiButton" />
+
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

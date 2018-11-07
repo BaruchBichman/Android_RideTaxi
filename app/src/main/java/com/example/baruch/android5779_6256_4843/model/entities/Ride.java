@@ -57,7 +57,7 @@ public class Ride {
         mFinishTime = finishTime;
     }
 
-    public String getClientFirstNameName() {
+    public String getClientFirstName() {
         return mClientFirstName;
     }
 
