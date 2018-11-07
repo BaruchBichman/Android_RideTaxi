@@ -69,11 +69,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/pickup_addressEditText"
+            android:hint="@string/pickup_addressEditText_current_Finding_your_location"
             android:inputType="textPostalAddress"
             android:layout_margin="@dimen/marginEditText"
             android:drawableLeft="@drawable/search_icon"
-            android:drawableStart="@drawable/search_icon" />
+            android:drawableStart="@drawable/search_icon"
+            android:focusable="false"/>
 
         <EditText
             android:id="@+id/destinationEditText"
@@ -84,7 +85,8 @@
             android:inputType="textPostalAddress"
             android:layout_margin="@dimen/marginEditText"
             android:drawableLeft="@drawable/search_icon"
-            android:drawableStart="@drawable/search_icon" />
+            android:drawableStart="@drawable/search_icon"
+            android:focusable="false"/>
 
         <Button
             android:id="@+id/orderTaxiButton"
