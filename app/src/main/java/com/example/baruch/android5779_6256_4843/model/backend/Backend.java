@@ -4,10 +4,9 @@ import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 
 public interface Backend {
     void addNewClientRequestToDataBase(Ride ride,Action action);
-    interface Action<T> {
-        void onSuccess(T obj);
-        void onFailure(Exception exception);
-        void onProgress(String status, double percent);
 
+    interface Action {
+        void onSuccess();
+        void onFailure();
     }
 }

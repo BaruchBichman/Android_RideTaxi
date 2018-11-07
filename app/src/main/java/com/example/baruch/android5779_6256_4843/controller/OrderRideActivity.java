@@ -1,18 +1,19 @@
 package com.example.baruch.android5779_6256_4843.controller;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.baruch.android5779_6256_4843.R;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.backend.BackendFactory;
+import com.example.baruch.android5779_6256_4843.model.entities.ClientRequestStatus;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 
-import java.lang.ref.WeakReference;
+import static android.widget.Toast.LENGTH_LONG;
 
 public class OrderRideActivity extends AppCompatActivity {
 
@@ -26,7 +27,6 @@ public class OrderRideActivity extends AppCompatActivity {
 
     private Ride ride;
     private static Backend backend;
-    private MyTask myTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class OrderRideActivity extends AppCompatActivity {
         pickUpAddressEditText=(EditText)findViewById(R.id.pickupAddressEditText);
         ride=new Ride();
         backend=BackendFactory.getBackend();
-        final OrderRideActivity context=this;
+
 
         newRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,63 +53,26 @@ public class OrderRideActivity extends AppCompatActivity {
                 ride.setClientTelephone(phoneNumberEditText.getText().toString());
                 ride.setDestinationAddress(destinationAddressEditText.getText().toString());
                 ride.setPickupAddress(pickUpAddressEditText.getText().toString());
-                myTask=new MyTask(context);
-                myTask.execute(ride);
+                ride.setRideState(ClientRequestStatus.WAITING);
+                addClientRequestToDataBase(ride);
             }
         });
     }
 
-    private static class MyTask extends AsyncTask<Ride,Double,Boolean>{
-
-        private WeakReference<OrderRideActivity> activityWeakReference;
-        private Boolean result;
-
-        public MyTask(OrderRideActivity context) {
-            activityWeakReference=new WeakReference<>(context);
-        }
-
-        @Override
-        protected Boolean doInBackground(Ride... rides) {
-            backend.addNewClientRequestToDataBase(rides[0],new Backend.Action<Boolean>(){
-                @Override
-                public void onSuccess(Boolean obj) {
-
+    private void addClientRequestToDataBase(Ride ride) {
+        newRideButton.setEnabled(false);
+        backend.addNewClientRequestToDataBase(ride, new Backend.Action() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getBaseContext(),"We get your Order!",LENGTH_LONG).show();
                 }
-
-                @Override
-                public void onFailure(Exception exception) {
-
-                }
-
-                @Override
-                public void onProgress(String status, double percent) {
-
-                }
-            } );
-            return true;
-        }
-
-      /*  @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            OrderRideActivity activity=activityWeakReference.get();
-            activity.newRideButton.setEnabled(false);
-
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            OrderRideActivity activity=activityWeakReference.get();
-            if(!aBoolean) {
-                activity.newRideButton.setEnabled(true);
-                Toast.makeText(activity,"Sorry! An error appeared, Try again",Toast.LENGTH_LONG).show();
+            @Override
+            public void onFailure() {
+                newRideButton.setEnabled(true);
+                Toast.makeText(getBaseContext(),"We are sorry! The order didn't success\n Try Again!",LENGTH_LONG).show();
             }
-            else
-                Toast.makeText(activity,"We get your order!",Toast.LENGTH_LONG).show();
-        }
-*/
+        });
 
     }
+
 }

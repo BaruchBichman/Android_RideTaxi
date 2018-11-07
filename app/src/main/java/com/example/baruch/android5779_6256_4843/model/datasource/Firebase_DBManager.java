@@ -5,6 +5,7 @@ import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -29,7 +30,7 @@ public class Firebase_DBManager implements Backend {
         return firebase_dbManager;
     }
 
-    static DatabaseReference OrdersTaxiRef;
+    private static DatabaseReference OrdersTaxiRef;
     static {
         FirebaseDatabase database =FirebaseDatabase.getInstance();
         OrdersTaxiRef=database.getReference("orders");
@@ -45,17 +46,14 @@ public class Firebase_DBManager implements Backend {
         OrdersTaxiRef.child(key).setValue(ride).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                action.onSuccess(true);
-                action.onProgress("Request for a Taxi succeed",100);
+                action.onSuccess();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                action.onFailure(e);
-                action.onProgress("Error, Retry to order a Taxi",100);
+                action.onFailure();
             }
         });
-
     }
 
 }
