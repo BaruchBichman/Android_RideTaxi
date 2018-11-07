@@ -30,7 +30,7 @@ public class Firebase_DBManager implements Backend {
         return firebase_dbManager;
     }
 
-    static DatabaseReference OrdersTaxiRef;
+    private static DatabaseReference OrdersTaxiRef;
     static {
         FirebaseDatabase database =FirebaseDatabase.getInstance();
         OrdersTaxiRef=database.getReference("orders");
@@ -40,10 +40,20 @@ public class Firebase_DBManager implements Backend {
     /*--------------------OPERATIONS--------------------*/
 
     @Override
-    public Task addNewClientRequestToDataBase(final Ride ride) {
+    public void addNewClientRequestToDataBase(final Ride ride, final Action action) {
         String key=OrdersTaxiRef.push().getKey();
         ride.setKey(key);
-        return OrdersTaxiRef.child(key).setValue(ride);
+        OrdersTaxiRef.child(key).setValue(ride).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                action.onSuccess();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                action.onFailure();
+            }
+        });
     }
 
 }
