@@ -1,7 +1,7 @@
 package com.example.baruch.android5779_6256_4843.controller;
 
-import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.baruch.android5779_6256_4843.R;
-import com.example.baruch.android5779_6256_4843.model.backend.Action;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.backend.BackendFactory;
+import com.example.baruch.android5779_6256_4843.model.entities.ClientRequestStatus;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.lang.ref.WeakReference;
 
@@ -65,32 +68,32 @@ public class OrderRideActivity extends AppCompatActivity {
     private static class MyTask extends AsyncTask<Ride,Double,Boolean>{
 
         private WeakReference<OrderRideActivity> activityWeakReference;
-        private Boolean result;
 
         public MyTask(OrderRideActivity context) {
             activityWeakReference=new WeakReference<>(context);
         }
 
         @Override
-        protected Boolean doInBackground(Ride... rides) {
-            backend.addNewClientRequestToDataBase(rides[0], new Action() {
+        protected Boolean doInBackground(final Ride... rides) {
+                final Boolean result;
+            Task taskAddClientRequest= backend.addNewClientRequestToDataBase(rides[0]);
+            taskAddClientRequest.addOnSuccessListener(new OnSuccessListener() {
                 @Override
                 public void onSuccess(Object obj) {
+                    rides[0].setRideState(ClientRequestStatus.WAITING);
                 }
-
+            }).addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(Exception exception) {
-                }
-
-                @Override
-                public void onProgress(String status, double percent) {
+                public void onFailure(@NonNull Exception e) {
 
                 }
             });
+
             return true;
         }
 
-      /*  @Override
+
+        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             OrderRideActivity activity=activityWeakReference.get();
@@ -101,7 +104,6 @@ public class OrderRideActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-
             OrderRideActivity activity=activityWeakReference.get();
             if(!aBoolean) {
                 activity.newRideButton.setEnabled(true);
@@ -110,7 +112,7 @@ public class OrderRideActivity extends AppCompatActivity {
             else
                 Toast.makeText(activity,"We get your order!",Toast.LENGTH_LONG).show();
         }
-*/
+
 
     }
 }

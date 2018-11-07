@@ -1,11 +1,11 @@
 package com.example.baruch.android5779_6256_4843.model.datasource;
 import android.support.annotation.NonNull;
 
-import com.example.baruch.android5779_6256_4843.model.backend.Action;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -40,23 +40,10 @@ public class Firebase_DBManager implements Backend {
     /*--------------------OPERATIONS--------------------*/
 
     @Override
-    public void addNewClientRequestToDataBase(final Ride ride, final Action action) {
+    public Task addNewClientRequestToDataBase(final Ride ride) {
         String key=OrdersTaxiRef.push().getKey();
         ride.setKey(key);
-        OrdersTaxiRef.child(key).setValue(ride).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                action.onSuccess(true);
-                action.onProgress("Request for a Taxi succeed",100);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                action.onFailure(e);
-                action.onProgress("Error, Retry to order a Taxi",100);
-            }
-        });
-
+        return OrdersTaxiRef.child(key).setValue(ride);
     }
 
 }
