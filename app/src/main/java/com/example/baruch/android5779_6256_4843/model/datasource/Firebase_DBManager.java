@@ -1,7 +1,6 @@
 package com.example.baruch.android5779_6256_4843.model.datasource;
 import android.support.annotation.NonNull;
 
-import com.example.baruch.android5779_6256_4843.model.backend.Action;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.tasks.OnFailureListener;

@@ -1,16 +1,13 @@
 package com.example.baruch.android5779_6256_4843.controller;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.baruch.android5779_6256_4843.R;
-import com.example.baruch.android5779_6256_4843.model.backend.Action;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.backend.BackendFactory;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
@@ -73,20 +70,22 @@ public class OrderRideActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Ride... rides) {
-            backend.addNewClientRequestToDataBase(rides[0], new Action() {
+            backend.addNewClientRequestToDataBase(rides[0],new Backend.Action<Boolean>(){
                 @Override
-                public void onSuccess(Object obj) {
+                public void onSuccess(Boolean obj) {
+
                 }
 
                 @Override
                 public void onFailure(Exception exception) {
+
                 }
 
                 @Override
                 public void onProgress(String status, double percent) {
 
                 }
-            });
+            } );
             return true;
         }
 
