@@ -1,10 +1,17 @@
 package com.example.baruch.android5779_6256_4843.controller;
 
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,26 +25,25 @@ import com.example.baruch.android5779_6256_4843.model.entities.ClientRequestStat
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class OrderRideActivity extends AppCompatActivity{
+public class OrderRideActivity extends AppCompatActivity {
 
     final int PLACE_PICKER_REQUEST_DESTINATION = 1;
     final int PLACE_PICKER_REQUEST_PICKUP = 2;
-    final int REQUEST_CHECK_SETTINGS=3;
+    final int REQUEST_CHECK_SETTINGS = 3;
     private Button newRideButton;
     private EditText firstNameEditText;
     private EditText lastNameEditText;
@@ -47,60 +53,91 @@ public class OrderRideActivity extends AppCompatActivity{
     private EditText pickUpAddressEditText;
     private Ride ride;
 
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest mLocationRequest;
     private static Backend backend;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
+    private Geocoder mGeocoder;
+    private Location mLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_ride);
 
-        ride=new Ride();
-        backend=BackendFactory.getBackend();
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        createLocationRequest();
+        ride = new Ride();
+        backend = BackendFactory.getBackend();
         findViews();
-        getMyLocation();
+        getLocation();
+
     }
 
-    private void getMyLocation() {
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        SettingsClient client = LocationServices.getSettingsClient(this);
-        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+    private void getLocation() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_SETTINGS);
+        } else {
+            //if permission is granted
+            buildLocationRequest();
+            buildLocationCallBack();
 
+            //create FusedProviderClient
+            mFusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_SETTINGS);
+                return;
             }
-        }).addOnFailureListener(this, new OnFailureListener() {
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            }
+    }
+
+    private void buildLocationCallBack() {
+        mLocationCallback=new LocationCallback()
+        {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(OrderRideActivity.this,
-                                REQUEST_CHECK_SETTINGS);
-                    } catch (IntentSender.SendIntentException sendEx) {
-                        // Ignore the error.
+            public void onLocationResult(LocationResult locationResult) {
+                for(Location location: locationResult.getLocations())
+                    mLocation=location;
+                ride.setPickupAddress(mLocation);
+                displayAddress();
+            }
+        };
+    }
+
+    private void displayAddress() {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                mGeocoder = new Geocoder(OrderRideActivity.this, Locale.getDefault());
+                Address address;
+                List<Address> addresses;
+                try {
+                    addresses = mGeocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+                    if(addresses!=null && addresses.size()>0) {
+                        address = addresses.get(0);
+                        pickUpAddressEditText.setText(address.getAddressLine(0) + ' ' + address.getLocality() +
+                                ' ' + address.getCountryName());
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                return null;
             }
-        });
+        }.execute();
+
 
     }
 
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+    private void buildLocationRequest() {
+        mLocationRequest=new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(3000);
+        mLocationRequest.setSmallestDisplacement(10);
     }
+
+
     private void findViews() {
         newRideButton = (Button) findViewById(R.id.orderTaxiButton);
         firstNameEditText = (EditText) findViewById(R.id.firstNameEditText);
@@ -145,17 +182,14 @@ public class OrderRideActivity extends AppCompatActivity{
             }
         });
     }
-
     private void setRide() {
         ride.setClientFirstName(firstNameEditText.getText().toString());
         ride.setClientLastName(lastNameEditText.getText().toString());
         ride.setClientEmail(emailEditText.getText().toString());
         ride.setClientTelephone(phoneNumberEditText.getText().toString());
-        ride.setDestinationAddress(destinationAddressEditText.getText().toString());
-        ride.setPickupAddress(pickUpAddressEditText.getText().toString());
+        //ride.setPickupAddress(pickUpAddressEditText.getText().toString());
         ride.setRideState(ClientRequestStatus.WAITING);
     }
-
     private void addClientRequestToDataBase(Ride ride) {
         newRideButton.setEnabled(false);
         backend.addNewClientRequestToDataBase(ride, new Backend.Action() {
@@ -171,7 +205,6 @@ public class OrderRideActivity extends AppCompatActivity{
         });
 
     }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST_DESTINATION) {
             if (resultCode == RESULT_OK) {
@@ -185,6 +218,35 @@ public class OrderRideActivity extends AppCompatActivity{
                 pickUpAddressEditText.setText(place.getAddress());
             }
         }
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode)
+        {
+            case REQUEST_CHECK_SETTINGS:
+            {
+                if(grantResults.length>0)
+                {
+                    if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                    {
+
+                    }
+                    else if(grantResults[0]==PackageManager.PERMISSION_DENIED)
+                    {
+                        Toast.makeText(this,"Sorry, you must allow gps location to use this app",LENGTH_LONG).show();
+
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    }
 }

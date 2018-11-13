@@ -1,13 +1,15 @@
 package com.example.baruch.android5779_6256_4843.model.entities;
 
+import android.location.Location;
+
 import java.time.LocalTime;
 
 public class Ride {
 
 
     private ClientRequestStatus mRideState;
-    private String mPickupAddress;
-    private String mDestinationAddress;
+    private Location mPickupAddress;
+    private Location mDestinationAddress;
     private LocalTime mStartTime;
     private LocalTime mFinishTime;
     private String mClientFirstName;
@@ -25,19 +27,19 @@ public class Ride {
         mRideState = rideState;
     }
 
-    public String getPickupAddress() {
+    public Location getPickupAddress() {
         return mPickupAddress;
     }
 
-    public void setPickupAddress(String startAddress) {
+    public void setPickupAddress(Location startAddress) {
         mPickupAddress = startAddress;
     }
 
-    public String getDestinationAddress() {
+    public Location getDestinationAddress() {
         return mDestinationAddress;
     }
 
-    public void setDestinationAddress(String destinationAddress) {
+    public void setDestinationAddress(Location destinationAddress) {
         mDestinationAddress = destinationAddress;
     }
 
