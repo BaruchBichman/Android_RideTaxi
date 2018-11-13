@@ -183,13 +183,14 @@ public class OrderRideActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!Exceptions.checkOnlyLetters(s.toString())){
+                if(!Exceptions.checkOnlyLetters(s.toString()))
+                {
                     firstNameEditText.setError("Only letters");
                 }
                 else
                 {
                     firstNameEditText.setError(null);
-                 
+
                 }
             }
         });

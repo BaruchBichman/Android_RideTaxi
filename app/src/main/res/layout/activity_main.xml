@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.MainActivity">
-
+    tools:context=".controller.MainActivity"
+    android:background="@drawable/taxi_background">
 
     <Button
         android:id="@+id/startButton"
@@ -13,20 +13,12 @@
         android:textSize="20sp"
         android:textColor="@color/background_material_light"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logoImageView"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/rounded_button"
         android:text="@string/start"
     />
 
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="100dp"
-        android:contentDescription="@string/app_name"
-        app:srcCompat="@drawable/ride_taxi_logo"
-         />
+
 
 </RelativeLayout>

@@ -8,9 +8,11 @@ import android.widget.Button;
 
 import com.example.baruch.android5779_6256_4843.R;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private Button startButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
