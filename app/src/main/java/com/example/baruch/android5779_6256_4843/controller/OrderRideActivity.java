@@ -2,16 +2,20 @@ package com.example.baruch.android5779_6256_4843.controller;
 
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -78,6 +82,7 @@ public class OrderRideActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_SETTINGS);
         } else {
             //if permission is granted
+            enableGps();
             buildLocationRequest();
             buildLocationCallBack();
 
@@ -90,6 +95,33 @@ public class OrderRideActivity extends AppCompatActivity {
             }
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             }
+    }
+
+    private void enableGps() {
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
+    }
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick( final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                        Toast.makeText(OrderRideActivity.this,"Sorry, you must allow gps location to use this app",LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void buildLocationCallBack() {
@@ -106,9 +138,6 @@ public class OrderRideActivity extends AppCompatActivity {
     }
 
     private void displayAddress() {
-        new AsyncTask<Void,Void,Void>(){
-            @Override
-            protected Void doInBackground(Void... voids) {
                 mGeocoder = new Geocoder(OrderRideActivity.this, Locale.getDefault());
                 Address address;
                 List<Address> addresses;
@@ -116,16 +145,11 @@ public class OrderRideActivity extends AppCompatActivity {
                     addresses = mGeocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
                     if(addresses!=null && addresses.size()>0) {
                         address = addresses.get(0);
-                        pickUpAddressEditText.setText(address.getAddressLine(0) + ' ' + address.getLocality() +
-                                ' ' + address.getCountryName());
+                        pickUpAddressEditText.setText(address.getAddressLine(0));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return null;
-            }
-        }.execute();
-
 
     }
 
@@ -210,12 +234,21 @@ public class OrderRideActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 destinationAddressEditText.setText(place.getAddress());
+                Location location=new Location("destination");
+                location.setLatitude(place.getLatLng().latitude);
+                location.setLongitude(place.getLatLng().longitude);
+                ride.setDestinationAddress(location);
             }
         }
         if (requestCode == PLACE_PICKER_REQUEST_PICKUP) {
             if (resultCode == RESULT_OK) {
+                mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
                 Place place = PlacePicker.getPlace(data, this);
                 pickUpAddressEditText.setText(place.getAddress());
+                Location location=new Location("pickup");
+                location.setLatitude(place.getLatLng().latitude);
+                location.setLongitude(place.getLatLng().longitude);
+                ride.setPickupAddress(location);
             }
         }
 
@@ -236,7 +269,6 @@ public class OrderRideActivity extends AppCompatActivity {
                     }
                     else if(grantResults[0]==PackageManager.PERMISSION_DENIED)
                     {
-                        Toast.makeText(this,"Sorry, you must allow gps location to use this app",LENGTH_LONG).show();
 
                     }
                 }
@@ -245,8 +277,8 @@ public class OrderRideActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 }
