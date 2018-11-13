@@ -9,10 +9,13 @@
 
     <Button
         android:id="@+id/startButton"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
+        android:textSize="20sp"
+        android:textColor="@color/background_material_light"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logoImageView"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_button"
         android:text="@string/start"
     />
 

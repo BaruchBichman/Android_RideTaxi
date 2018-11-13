@@ -8,8 +8,8 @@ public class Ride {
 
 
     private ClientRequestStatus mRideState;
-    private Location mPickupAddress;
-    private Location mDestinationAddress;
+    private AddressAndLocation mPickupAddress;
+    private AddressAndLocation mDestinationAddress;
     private LocalTime mStartTime;
     private LocalTime mFinishTime;
     private String mClientFirstName;
@@ -27,20 +27,20 @@ public class Ride {
         mRideState = rideState;
     }
 
-    public Location getPickupAddress() {
+    public AddressAndLocation getPickupAddress() {
         return mPickupAddress;
     }
 
-    public void setPickupAddress(Location startAddress) {
-        mPickupAddress = startAddress;
+    public void setPickupAddress(AddressAndLocation startAddress) {
+        mPickupAddress=new AddressAndLocation(startAddress);
     }
 
-    public Location getDestinationAddress() {
+    public AddressAndLocation getDestinationAddress() {
         return mDestinationAddress;
     }
 
-    public void setDestinationAddress(Location destinationAddress) {
-        mDestinationAddress = destinationAddress;
+    public void setDestinationAddress(AddressAndLocation destinationAddress) {
+        mDestinationAddress = new AddressAndLocation(destinationAddress);
     }
 
     public LocalTime getStartTime() {

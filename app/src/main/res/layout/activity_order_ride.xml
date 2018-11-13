@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:textColor="@color/accent_material_light"
             android:layout_marginTop="10dp"
             android:text="@string/enter_your_details"
             android:textSize="24sp" />
@@ -90,9 +91,11 @@
 
         <Button
             android:id="@+id/orderTaxiButton"
-            android:layout_width="wrap_content"
+            android:textColor="@color/background_material_light"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_button"
             android:text="@string/order_taxiButton" />
 
 

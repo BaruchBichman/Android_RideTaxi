@@ -17,6 +17,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +27,9 @@ import android.widget.Toast;
 import com.example.baruch.android5779_6256_4843.R;
 import com.example.baruch.android5779_6256_4843.model.backend.Backend;
 import com.example.baruch.android5779_6256_4843.model.backend.BackendFactory;
+import com.example.baruch.android5779_6256_4843.model.entities.AddressAndLocation;
 import com.example.baruch.android5779_6256_4843.model.entities.ClientRequestStatus;
+import com.example.baruch.android5779_6256_4843.model.entities.Exceptions;
 import com.example.baruch.android5779_6256_4843.model.entities.Ride;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -62,7 +66,6 @@ public class OrderRideActivity extends AppCompatActivity {
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private Geocoder mGeocoder;
-    private Location mLocation;
 
 
     @Override
@@ -127,30 +130,32 @@ public class OrderRideActivity extends AppCompatActivity {
     private void buildLocationCallBack() {
         mLocationCallback=new LocationCallback()
         {
+            Location fLocation;
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for(Location location: locationResult.getLocations())
-                    mLocation=location;
-                ride.setPickupAddress(mLocation);
-                displayAddress();
+                    fLocation=location;
+                String address=locationToAddress(fLocation);
+                ride.setPickupAddress(new AddressAndLocation(fLocation,address));
+                pickUpAddressEditText.setText(address);
             }
         };
     }
 
-    private void displayAddress() {
+    private String locationToAddress(Location location) {
                 mGeocoder = new Geocoder(OrderRideActivity.this, Locale.getDefault());
                 Address address;
                 List<Address> addresses;
                 try {
-                    addresses = mGeocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+                    addresses = mGeocoder.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
                     if(addresses!=null && addresses.size()>0) {
                         address = addresses.get(0);
-                        pickUpAddressEditText.setText(address.getAddressLine(0));
+                        return address.getAddressLine(0);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+        return null;
     }
 
     private void buildLocationRequest() {
@@ -165,9 +170,96 @@ public class OrderRideActivity extends AppCompatActivity {
     private void findViews() {
         newRideButton = (Button) findViewById(R.id.orderTaxiButton);
         firstNameEditText = (EditText) findViewById(R.id.firstNameEditText);
+        firstNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Exceptions.checkOnlyLetters(s.toString())){
+                    firstNameEditText.setError("Only letters");
+                }
+                else
+                {
+                    firstNameEditText.setError(null);
+                 
+                }
+            }
+        });
         lastNameEditText = (EditText) findViewById(R.id.lastNameEditText);
+        lastNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Exceptions.checkOnlyLetters(s.toString())){
+                    lastNameEditText.setError("Only letters");
+                }
+                else{
+                    lastNameEditText.setError(null);
+                }
+            }
+        });
         emailEditText = (EditText) findViewById(R.id.emailEditText);
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Exceptions.checkEmail(s.toString())){
+                    emailEditText.setError("Email not valid");
+                }
+                else{
+                    emailEditText.setError(null);
+                }
+
+            }
+        });
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
+        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Exceptions.checkOnlyNumbers(s.toString())){
+                    phoneNumberEditText.setError("Only numbers");
+                }
+                else{
+                    phoneNumberEditText.setError(null);
+                }
+            }
+        });
         destinationAddressEditText = (EditText) findViewById(R.id.destinationEditText);
         destinationAddressEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +303,6 @@ public class OrderRideActivity extends AppCompatActivity {
         ride.setClientLastName(lastNameEditText.getText().toString());
         ride.setClientEmail(emailEditText.getText().toString());
         ride.setClientTelephone(phoneNumberEditText.getText().toString());
-        //ride.setPickupAddress(pickUpAddressEditText.getText().toString());
         ride.setRideState(ClientRequestStatus.WAITING);
     }
     private void addClientRequestToDataBase(Ride ride) {
@@ -237,7 +328,7 @@ public class OrderRideActivity extends AppCompatActivity {
                 Location location=new Location("destination");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
-                ride.setDestinationAddress(location);
+                ride.setDestinationAddress(new AddressAndLocation(location,place.getAddress().toString()));
             }
         }
         if (requestCode == PLACE_PICKER_REQUEST_PICKUP) {
@@ -248,7 +339,7 @@ public class OrderRideActivity extends AppCompatActivity {
                 Location location=new Location("pickup");
                 location.setLatitude(place.getLatLng().latitude);
                 location.setLongitude(place.getLatLng().longitude);
-                ride.setPickupAddress(location);
+                ride.setPickupAddress(new AddressAndLocation(location,place.getAddress().toString()));
             }
         }
 
