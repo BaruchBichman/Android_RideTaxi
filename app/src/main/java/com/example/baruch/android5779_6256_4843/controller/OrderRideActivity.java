@@ -10,7 +10,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -18,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -294,11 +294,33 @@ public class OrderRideActivity extends AppCompatActivity {
         newRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isErrorsInput()){
+                    return;
+                }
+                if(isEmptyInput()){
+                    Toast.makeText(getBaseContext(), R.string.all_fields_required,LENGTH_LONG).show();
+                    return;
+                }
                 setRide();
                 addClientRequestToDataBase(ride);
             }
         });
     }
+
+    private boolean isEmptyInput() {
+        return TextUtils.isEmpty(firstNameEditText.getText())||
+               TextUtils.isEmpty(lastNameEditText.getText())||
+                TextUtils.isEmpty(emailEditText.getText())||
+                TextUtils.isEmpty(phoneNumberEditText.getText())||
+                TextUtils.isEmpty(pickUpAddressEditText.getText())||
+                TextUtils.isEmpty(destinationAddressEditText.getText());
+    }
+
+    private boolean isErrorsInput() {
+        return firstNameEditText.getError()!=null||lastNameEditText.getError()!=null
+                ||emailEditText.getError()!=null||phoneNumberEditText.getError()!=null;
+    }
+
     private void setRide() {
         ride.setClientFirstName(firstNameEditText.getText().toString());
         ride.setClientLastName(lastNameEditText.getText().toString());
