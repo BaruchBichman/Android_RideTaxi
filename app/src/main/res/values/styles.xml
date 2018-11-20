@@ -3,7 +3,8 @@
     <!-- Base application theme. -->
     <style name="BlueApp" parent="Theme.AppCompat.Light.NoActionBar" >
         <!-- Customize your theme here. -->
-
+        <item name="android:autofilledHighlight">@android:color/transparent</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
     </style>
 
 

@@ -29,7 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.OrderRideActivity"></activity>
+        <activity android:name=".controller.OrderRideActivity"
+            android:windowSoftInputMode="adjustResize">
+            </activity>
     </application>
 
 </manifest>

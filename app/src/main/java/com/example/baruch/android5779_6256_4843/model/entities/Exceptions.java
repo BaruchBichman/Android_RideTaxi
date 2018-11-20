@@ -3,7 +3,7 @@ package com.example.baruch.android5779_6256_4843.model.entities;
 public final class Exceptions {
 
     public static boolean checkOnlyLetters(String value) {
-        return value.matches("[a-zA-Z]*");
+        return value.matches("[a-zA-Z א-ת]*");
     }
 
     public static boolean checkOnlyNumbers(String value) {

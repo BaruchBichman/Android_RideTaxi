@@ -2,6 +2,7 @@ package com.example.baruch.android5779_6256_4843.controller;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,6 +68,7 @@ public class OrderRideActivity extends AppCompatActivity {
     private LocationCallback mLocationCallback;
     private Geocoder mGeocoder;
 
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,12 @@ public class OrderRideActivity extends AppCompatActivity {
         ride = new Ride();
         backend = BackendFactory.getBackend();
         findViews();
+
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("Finding your location...");
+        progressDialog.show();
         getLocation();
+
 
     }
 
@@ -137,6 +144,7 @@ public class OrderRideActivity extends AppCompatActivity {
                     fLocation=location;
                 String address=locationToAddress(fLocation);
                 ride.setPickupAddress(new AddressAndLocation(fLocation,address));
+                progressDialog.dismiss();
                 pickUpAddressEditText.setText(address);
             }
         };
@@ -294,7 +302,7 @@ public class OrderRideActivity extends AppCompatActivity {
         newRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isErrorsInput()){
+                if(isErrorInput()){
                     return;
                 }
                 if(isEmptyInput()){
@@ -316,7 +324,7 @@ public class OrderRideActivity extends AppCompatActivity {
                 TextUtils.isEmpty(destinationAddressEditText.getText());
     }
 
-    private boolean isErrorsInput() {
+    private boolean isErrorInput() {
         return firstNameEditText.getError()!=null||lastNameEditText.getError()!=null
                 ||emailEditText.getError()!=null||phoneNumberEditText.getError()!=null;
     }
@@ -333,7 +341,7 @@ public class OrderRideActivity extends AppCompatActivity {
         backend.addNewClientRequestToDataBase(ride, new Backend.Action() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getBaseContext(),"We get your Order!",LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),"We got your Order!",LENGTH_LONG).show();
                 }
             @Override
             public void onFailure() {

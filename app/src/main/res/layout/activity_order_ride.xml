@@ -5,10 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controller.OrderRideActivity">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
     <LinearLayout
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/accent_material_light"
         android:gravity="top"
         android:orientation="vertical">
@@ -20,6 +24,7 @@
             android:layout_marginTop="@dimen/padding_normal"
             android:orientation="vertical"
             android:padding="@dimen/padding_normal">
+
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/pickup_hint_layout"
@@ -58,7 +63,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_layout"
             android:orientation="vertical"
@@ -73,7 +78,8 @@
                     android:id="@+id/firstNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/marginEditText"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginHorizontal="35dp"
                     android:drawableLeft="@drawable/person_icon"
                     android:drawableStart="@drawable/person_icon"
                     android:ems="10"
@@ -90,7 +96,8 @@
                     android:id="@+id/lastNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/marginEditText"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginHorizontal="35dp"
                     android:drawableLeft="@drawable/person_icon"
                     android:drawableStart="@drawable/person_icon"
                     android:ems="10"
@@ -107,7 +114,8 @@
                     android:id="@+id/emailEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/marginEditText"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginHorizontal="35dp"
                     android:drawableLeft="@drawable/email_icon"
                     android:drawableStart="@drawable/email_icon"
                     android:ems="10"
@@ -125,7 +133,8 @@
                     android:id="@+id/phoneNumberEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/marginEditText"
+                    android:layout_marginVertical="15dp"
+                    android:layout_marginHorizontal="35dp"
                     android:drawableLeft="@drawable/phone_icon"
                     android:drawableStart="@drawable/phone_icon"
                     android:ems="10"
@@ -144,4 +153,5 @@
                 android:text="@string/order_taxiButton" />
         </LinearLayout>
     </LinearLayout>
+</ScrollView>
 </android.support.constraint.ConstraintLayout>
