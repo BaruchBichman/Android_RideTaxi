@@ -3,12 +3,20 @@ package com.example.baruch.android5779_6256_4843.model.entities;
 import android.location.Location;
 
 public class AddressAndLocation {
-    private Location mLocation;
+    public LatitudeAndLongitudeLocation getmLatitudeAndLongitudeLocation() {
+        return mLatitudeAndLongitudeLocation;
+    }
+
+    public void setmLatitudeAndLongitudeLocation(LatitudeAndLongitudeLocation mLatitudeAndLongitudeLocation) {
+        this.mLatitudeAndLongitudeLocation = mLatitudeAndLongitudeLocation;
+    }
+
+    private LatitudeAndLongitudeLocation mLatitudeAndLongitudeLocation;
     private String mAddress;
 
 
     public AddressAndLocation(AddressAndLocation addressAndLocation) {
-        mLocation=addressAndLocation.mLocation;
+        mLatitudeAndLongitudeLocation=addressAndLocation.mLatitudeAndLongitudeLocation;
         mAddress=addressAndLocation.mAddress;
     }
 
@@ -16,18 +24,10 @@ public class AddressAndLocation {
     }
 
     public AddressAndLocation(Location location, String address) {
-        mLocation = location;
+        mLatitudeAndLongitudeLocation =new LatitudeAndLongitudeLocation( location);
         mAddress = address;
     }
 
-
-    public Location getLocation() {
-        return mLocation;
-    }
-
-    public void setLocation(Location location) {
-        mLocation = location;
-    }
 
     public String getAddress() {
         return mAddress;
