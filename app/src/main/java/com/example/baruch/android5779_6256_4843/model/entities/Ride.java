@@ -2,7 +2,13 @@ package com.example.baruch.android5779_6256_4843.model.entities;
 
 import android.location.Location;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.ServerValue;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Ride {
 
@@ -17,8 +23,10 @@ public class Ride {
     private String mClientTelephone;
     private String mClientEmail;
     private String mKey;
+    private final Long timestamp = Calendar.getInstance().getTime().getTime();
 
-
+    public Long getTimestamp() { return timestamp; }
+    
     public ClientRequestStatus getRideState() {
         return mRideState;
     }
