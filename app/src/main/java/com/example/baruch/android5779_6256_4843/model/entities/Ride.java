@@ -23,10 +23,19 @@ public class Ride {
     private String mClientTelephone;
     private String mClientEmail;
     private String mKey;
+    private String mDriverKey;
+
+    public String getDriverKey() {
+        return mDriverKey;
+    }
+
+    public void setDriverKey(String mDriverKey) {
+        this.mDriverKey = mDriverKey;
+    }
     private final Long timestamp = Calendar.getInstance().getTime().getTime();
 
     public Long getTimestamp() { return timestamp; }
-    
+
     public ClientRequestStatus getRideState() {
         return mRideState;
     }
